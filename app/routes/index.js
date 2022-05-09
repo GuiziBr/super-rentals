@@ -1,18 +1,9 @@
 import Route from '@ember/routing/route';
-
-const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
-
+import { service } from '@ember/service';
 export default class IndexRoute extends Route {
-  async model() {
-    const response = await fetch('/api/rentals.json');
-    const { data } = await response.json();
+  @service store;
 
-    return data.map(({ attributes, id }) => ({
-      id,
-      type: COMMUNITY_CATEGORIES.includes(attributes.category)
-        ? 'Community'
-        : 'Standalone',
-      ...attributes,
-    }));
+  async model() {
+    return this.store.findAll('rental');
   }
 }
